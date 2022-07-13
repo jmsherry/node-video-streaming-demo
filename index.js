@@ -1,12 +1,9 @@
 import express from "express";
 import fs from "fs";
-import path from "path";
 
 const app = express();
 
-app.get("/", function (req, res) {
-  res.sendFile(path.resolve("./public/index.html"));
-});
+app.use(express.static('public'));
 
 app.get("/video/bad/:name", function (req, res) {
   fs.readFile(`./videos/${req.params.name}`, (err, data) => {
@@ -36,6 +33,12 @@ app.get("/video/good/:name", function (req, res) {
   res.writeHead(206, headers);
   const videoStream = fs.createReadStream(videoPath, { start, end });
   videoStream.pipe(res);
+});
+
+
+
+app.all("*", (req, res) => {
+  res.sendStatus(404);
 });
 
 app.listen(8000, function () {
