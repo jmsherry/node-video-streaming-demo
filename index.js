@@ -3,7 +3,7 @@ import fs from "fs";
 
 const app = express();
 
-app.use(express.static('public'));
+app.use(express.static("public"));
 
 app.get("/video/bad/:name", function (req, res) {
   fs.readFile(`./videos/${req.params.name}`, (err, data) => {
@@ -30,11 +30,11 @@ app.get("/video/good/:name", function (req, res) {
     "Content-Length": contentLength,
     "Content-Type": "video/mp4",
   };
+  // https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/206 - Partial Content Success
   res.writeHead(206, headers);
   const videoStream = fs.createReadStream(videoPath, { start, end });
   videoStream.pipe(res);
 });
-
 
 
 app.all("*", (req, res) => {
